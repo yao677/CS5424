@@ -55,16 +55,30 @@ def assign_attr(graph):
         graph.add_node(i, **attr_dict)
     return graph
 
-#SIR event for the network
-def SIR(graph,timestep=1):
-   print("1") 
+#SIR event in the network
+def SIR(graph):
+    "A SIR event consits of I+S->I+I, I->R and S->I"
+    G=graph.copy()
+   
+    #I+S->I+I, face to face information spreading
+    for node in G.nodes():
+        neighbors=G.neighbors(node)
+        if G.nodes[node]["Info"]=="S":
+            for each in neighbors:
+                if G.node()[each]["Info"]=="I":
+                    graph.add_node(node,Info="I")
+                    break
 
 
 
+        #I->R
+
+
+        #S->I
 
 
 # draw graph function
-def draw_graph(graph, labels=None, graph_layout='shell',
+def draw_graph(graph, filename,labels=None, graph_layout='shell',
                node_size=40, node_color='blue', node_alpha=0.3,
                node_text_size=12,
                edge_color='black', edge_alpha=0.3, edge_tickness=0.5,
@@ -88,17 +102,19 @@ def draw_graph(graph, labels=None, graph_layout='shell',
     nx.draw_networkx_edges(graph,graph_pos,width=edge_tickness,alpha=edge_alpha,edge_color=edge_color)
     nx.draw_networkx_labels(graph, graph_pos,font_size=node_text_size,font_family=text_font)
 
-    #show graph 
-    plt.show()
+    #show graph
+    plt.savefig(filename)
+    plt.close()
+       
 
 def color_seq(graph):
     #draw nodes, blue for party A, red for party B, grey for party N
     color_list=[]
     for i in range(nx.number_of_nodes(graph)):
         person=graph.node[i]
-        if person["party"]=="A":
+        if person["Info"]=="I":
             color_list.append("red")
-        elif person["party"]=="B":
+        elif person["Info"]=="S":
             color_list.append("blue")
         else:
             color_list.append("green")
@@ -112,7 +128,7 @@ def main():
     #Our sample network consists of 100,000 nodes, and average connectivity of node
     #ranges from 5 to 25
 
-    num_nodes=100
+    num_nodes=10
     avg_degree=rd.randint(5,25)
     num_edges=num_nodes*avg_degree/2
     seed=7
@@ -120,9 +136,11 @@ def main():
 
     #assign attributes to nodes in the network
     G=assign_attr(G)
-
-    #draw graph   
-    draw_graph(G,graph_layout='random')
+    #draw graph
+    draw_graph(G,"beforeSIR")
+    SIR(G)
+    #draw graph after applying one SIR event   
+    draw_graph(G,"afterSIR")
     print("--- %s seconds ---" % (time.time() - start_time))
 
 
