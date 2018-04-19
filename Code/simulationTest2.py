@@ -91,6 +91,8 @@ def SIR(graph, infoTypes):
                         colIndex = infoCodes[infoTypes[i]]
                         temp = G.nodes[node]["p"]
                         temp += Pv[rowIndex][colIndex]
+                        if temp > 1 : temp = 1
+                        if temp < 0 : temp = 0
                         #G.nodes[node]["p"] += Pv[rowIndex][colIndex]
                         graph.add_node(node, p=temp)    # update voting prob
 
