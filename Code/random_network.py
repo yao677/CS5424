@@ -4,7 +4,7 @@ import random as rd
 import time
 
 
-# add attributes to nodes in the network
+
 
 
 # generate attributes for a random node
@@ -26,7 +26,7 @@ def create_attr():
     #"C"-> calm, "A"-> agitated
     rd_num=rd.uniform(0,1)
     if attr_dict["party"]=="N":
-        attr_dict["emot"]=="C"
+        attr_dict["emot"]="C"
     else:
         if rd_num<0.5:
             attr_dict["emot"]="C"
@@ -48,11 +48,26 @@ def create_attr():
 
     return attr_dict
 
+def assign_attr(graph):
+    "add attributes to nodes in a network"
+    for i in range(nx.number_of_nodes(graph)):
+        attr_dict=create_attr()
+        graph.add_node(i, **attr_dict)
+    return graph
+
+#SIR event for the network
+def SIR(graph,timestep=1):
+   print("1") 
+
+
+
+
+
 # draw graph function
 def draw_graph(graph, labels=None, graph_layout='shell',
-               node_size=10, node_color='blue', node_alpha=0.3,
+               node_size=40, node_color='blue', node_alpha=0.3,
                node_text_size=12,
-               edge_color='blue', edge_alpha=0.3, edge_tickness=1,
+               edge_color='black', edge_alpha=0.3, edge_tickness=0.5,
                edge_text_pos=0.3,
                text_font='sans-serif'):
     # these are different layouts for the network you may try
@@ -80,12 +95,13 @@ def color_seq(graph):
     #draw nodes, blue for party A, red for party B, grey for party N
     color_list=[]
     for i in range(nx.number_of_nodes(graph)):
-        if attr_dict["party"]=="A":
+        person=graph.node[i]
+        if person["party"]=="A":
             color_list.append("red")
-        elif attr_dict["party"]=="B":
+        elif person["party"]=="B":
             color_list.append("blue")
         else:
-            color_list.append("grey")
+            color_list.append("green")
     return color_list    
 
 def main():
@@ -103,14 +119,12 @@ def main():
     G=nx.dense_gnm_random_graph(num_nodes,num_edges,seed)
 
     #assign attributes to nodes in the network
-    for i in range(100):
-        attr_dict=create_attr()
-        for key in attr_dict.keys():
-            nx.set_node_attributes(G, key, attr_dict[key])
+    G=assign_attr(G)
 
+    #draw graph   
     draw_graph(G,graph_layout='random')
-    print(G.nodes())
     print("--- %s seconds ---" % (time.time() - start_time))
 
 
-main()
+if __name__=="__main__":
+    main()
