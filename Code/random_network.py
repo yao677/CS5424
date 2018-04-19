@@ -53,7 +53,7 @@ def assign_attr(graph):
     for i in range(nx.number_of_nodes(graph)):
         attr_dict=create_attr()
         graph.add_node(i, **attr_dict)
-    return graph
+   
 
 #SIR event in the network
 def SIR(graph):
@@ -135,7 +135,7 @@ def main():
     G=nx.dense_gnm_random_graph(num_nodes,num_edges,seed)
 
     #assign attributes to nodes in the network
-    G=assign_attr(G)
+    assign_attr(G)
     #draw graph
     draw_graph(G,"beforeSIR")
     SIR(G)
