@@ -27,25 +27,6 @@ def create_attr(probA, probB):
     attr_dict={}
     #38% to be in party A, 32% in party B, 30% in party N
     #Party A-> Democrats, Party B-> Republican, Party N-> Neutral
-    """rd_num=rd.uniform(0,1)
-    if rd_num<probA:
-        attr_dict["party"]="A"
-    elif probA<=rd_num<(probA + probB):
-        attr_dict["party"]="B"
-    else:
-        attr_dict["party"]="N"
-
-    #emotional state, key is "emot"
-    #"C"-> calm, "A"-> agitated
-    rd_num=rd.uniform(0,1)
-    if attr_dict["party"]=="N":
-        attr_dict["emot"]="C"
-    else:
-        if rd_num<0.5:
-            attr_dict["emot"]="C"
-        else:
-            attr_dict["emot"]="A"
-    """
 
     rd_num=rd.uniform(0,1)
     if rd_num<probA:
@@ -66,14 +47,7 @@ def create_attr(probA, probB):
 
     #state of a person with repsect to a piece of information
     #S-> uninformed, I-> informed & active , R-> informed & inactive
-    """rd_num=rd.randint(1,3)
-    if rd_num==1:
-        attr_dict["Info"]="S"
-    elif rd_num==2:
-        attr_dict["Info"]="I"
-    else:
-        attr_dict["Info"]="R"
-    """
+
     if rd.uniform(0,1)<0.7 : attr_dict["Info"]=["S"]
     else : attr_dict["Info"]=["I"]
 
@@ -107,10 +81,9 @@ def SIR(graph, infoTypes):
                 for each in neighbors:
                     if G.node()[each]["Info"][i]=="I":
                         temp = G.nodes[node]["Info"]
-                        temp[i] = "I"                        #graph.add_node(node,Info="I") # change to infected
-                        graph.add_node(node, Info=temp)
+                        temp[i] = "I"
+                        graph.add_node(node, Info=temp) # update to infected
 
-                        # everything works from here down
                         # UPDATE VOTING PROBABILITY
                         #state = G.nodes[node]["party"] + G.nodes[node]["emot"]
                         state = G.nodes[node]["state"]
@@ -119,22 +92,11 @@ def SIR(graph, infoTypes):
                         temp = G.nodes[node]["p"]
                         temp += Pv[rowIndex][colIndex]
                         #G.nodes[node]["p"] += Pv[rowIndex][colIndex]
-                        graph.add_node(node, p=temp)
+                        graph.add_node(node, p=temp)    # update voting prob
 
                         # UPDATE EMOTIONAL STATE
 
                         break
-
-    """#state = G.nodes[node]["party"] + G.nodes[node]["emot"]
-    state = G.nodes[0]["state"]
-    rowIndex = partyCodes[state]
-    colIndex = infoCodes[state]
-    temp = G.nodes[0]["p"]
-    temp += Pv[rowIndex][colIndex]
-    print("before change", G.nodes[0]["p"])
-    #G.nodes[node]["p"] += Pv[rowIndex][colIndex]
-    graph.add_node(0, p=temp)
-    print("after change", G.nodes[0]["p"])"""
 
             #I->R
 
