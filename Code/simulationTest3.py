@@ -60,7 +60,7 @@ def assign_attr(graph, probA, probB):
 
 
 #SIR event in the network
-def SIR(graph, infoTypes, pInfect, pRecover):
+def SIR(graph, infoTypes, pInfect, pRecover, pMediaEvent, pObserveMedia):
     "A SIR event consits of I+S->I+I, I->R and S->I"
 
     global Pv
@@ -119,7 +119,24 @@ def SIR(graph, infoTypes, pInfect, pRecover):
             #print("Done node", count)
             count += 1
 
-            #S->I
+    #S->I (media interactions)
+    if rd.uniform(0,1) <= pMediaEvent :  # does media event occur?
+
+        infoTypes.append( rd.choice(['GA', 'BA', 'GB', 'BB']) )
+
+        for node in G :
+            if rd.uniform(0,1) <= pObserveMedia :
+                # media event is observed
+                temp = G.nodes[node]["Info"]
+                temp.append("I")
+                graph.add_node(node, Info=temp)
+            else :
+                # media event is not observed
+                temp = G.nodes[node]["Info"]
+                temp.append("S")
+                graph.add_node(node, Info=temp)
+
+    return
 
 
 # draw graph function
@@ -189,43 +206,42 @@ def main():
     # generate a random graph
     #Our sample network consists of 100,000 nodes, and average connectivity of node
     #ranges from 5 to 25
-    days = 100
+
     seedVal = 7
     rd.seed(seedVal)
 
     # PARAMETERS
-    num_nodes=10000    # for testing only
+    days = 100
+    num_nodes=10000
     #avg_degree=rd.randint(5,25)
     avg_degree = 5
     num_edges=num_nodes*avg_degree/2
     #num_edges = 10     # for testing only
-    probA = 0.38
-    probB = 0.32
-    pInfect = 0.6
-    pRecover = 0.1
+    probA = 0.38        # probability of being in party A
+    probB = 0.32        # probability of being in party B
+    pInfect = 0.6       # probability of receiving info from another individual
+    pRecover = 0.1      # probability of stopping the spread of information
+    pMediaEvent = 0.7   # probability a media event occurs
+    pObserveMedia = 0.2 # probability of observing a media event
+
+    # initialization of information array
     infoTypes = [ rd.choice(['GA', 'BA', 'GB', 'BB']) ]
 
-
-
+    # create the network
     G=nx.dense_gnm_random_graph(num_nodes,num_edges,seedVal)
     print("Done building network", "--- %s seconds ---" % (time.time() - start_time))
+
     #assign attributes to nodes in the network
     assign_attr(G, probA, probB)
     print("Done assigning", "--- %s seconds ---" % (time.time() - start_time))
-    #draw graph
+
+
     print("info", infoTypes)
-    """print("state before", [G.nodes[node]["state"] for node in G.nodes] )
-    print("infos before", [G.nodes[node]["Info"] for node in G.nodes] )
-    print("probs before", [G.nodes[node]["p"] for node in G.nodes] )
-    draw_graph(G,"beforeSIR")"""
     for i in range(days) :
-        SIR(G, infoTypes, pInfect, pRecover)
+        SIR(G, infoTypes, pInfect, pRecover, pMediaEvent, pObserveMedia)
+    print("info", infoTypes)
     election(G)
-    """print("state after", [G.nodes[node]["state"] for node in G.nodes] )
-    print("infos after", [G.nodes[node]["Info"] for node in G.nodes] )
-    print("probs after", [G.nodes[node]["p"] for node in G.nodes] )
-    #draw graph after applying one SIR event
-    draw_graph(G,"afterSIR")"""
+
     print("--- %s seconds ---" % (time.time() - start_time))
 
 
