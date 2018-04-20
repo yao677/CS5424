@@ -72,7 +72,7 @@ def SIR(graph, infoTypes, pInfect, pRecover):
     G=graph.copy()
 
     for i in range( len(infoTypes) ) :
-
+        count = 0
         for node in G.nodes():
             neighbors=G.neighbors(node)
 
@@ -116,7 +116,8 @@ def SIR(graph, infoTypes, pInfect, pRecover):
                                 graph.add_node(node, state=newState)
 
                             break
-
+            print("Done node", count)
+            count += 1
 
             #S->I
 
@@ -177,10 +178,11 @@ def main():
     rd.seed(seedVal)
 
     # PARAMETERS
-    num_nodes=10    # for testing only
+    num_nodes=10000    # for testing only
     #avg_degree=rd.randint(5,25)
-    #num_edges=num_nodes*avg_degree/2
-    num_edges = 10     # for testing only
+    avg_degree = 5
+    num_edges=num_nodes*avg_degree/2
+    #num_edges = 10     # for testing only
     probA = 0.38
     probB = 0.32
     pInfect = 0.6
@@ -190,21 +192,22 @@ def main():
 
 
     G=nx.dense_gnm_random_graph(num_nodes,num_edges,seedVal)
-
+    print("Done building network", "--- %s seconds ---" % (time.time() - start_time))
     #assign attributes to nodes in the network
     assign_attr(G, probA, probB)
+    print("Done assigning", "--- %s seconds ---" % (time.time() - start_time))
     #draw graph
-    print("info", infoTypes)
+    """print("info", infoTypes)
     print("state before", [G.nodes[node]["state"] for node in G.nodes] )
     print("infos before", [G.nodes[node]["Info"] for node in G.nodes] )
     print("probs before", [G.nodes[node]["p"] for node in G.nodes] )
-    draw_graph(G,"beforeSIR")
+    draw_graph(G,"beforeSIR")"""
     SIR(G, infoTypes, pInfect, pRecover)
-    print("state after", [G.nodes[node]["state"] for node in G.nodes] )
+    """print("state after", [G.nodes[node]["state"] for node in G.nodes] )
     print("infos after", [G.nodes[node]["Info"] for node in G.nodes] )
     print("probs after", [G.nodes[node]["p"] for node in G.nodes] )
     #draw graph after applying one SIR event
-    draw_graph(G,"afterSIR")
+    draw_graph(G,"afterSIR")"""
     print("--- %s seconds ---" % (time.time() - start_time))
 
 
