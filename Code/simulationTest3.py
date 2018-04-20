@@ -116,7 +116,7 @@ def SIR(graph, infoTypes, pInfect, pRecover):
                                 graph.add_node(node, state=newState)
 
                             break
-            print("Done node", count)
+            #print("Done node", count)
             count += 1
 
             #S->I
@@ -166,6 +166,22 @@ def color_seq(graph):
             color_list.append("green")
     return color_list
 
+def election(graph) :
+    """ simulate the election """
+    votesA, votesB = 0, 0
+
+    for node in graph :
+        # draw rand num, if below voting prob for cand A, vote A, else vote B
+        if graph.nodes[node]["p"] <= rd.uniform(0,1) : votesA += 1
+        else : votesB += 1
+
+    print("Tallies: \n\tCandidate A:", votesA, "\n\tCandidate B:", votesB)
+    if votesA > votesB : print("Candidate A Wins!")
+    else : print("Candidate B Wins!")
+
+    return
+
+
 def main():
     #record start time
     start_time=time.time()
@@ -173,8 +189,8 @@ def main():
     # generate a random graph
     #Our sample network consists of 100,000 nodes, and average connectivity of node
     #ranges from 5 to 25
-
-    seedVal=7
+    days = 100
+    seedVal = 7
     rd.seed(seedVal)
 
     # PARAMETERS
@@ -197,12 +213,14 @@ def main():
     assign_attr(G, probA, probB)
     print("Done assigning", "--- %s seconds ---" % (time.time() - start_time))
     #draw graph
-    """print("info", infoTypes)
-    print("state before", [G.nodes[node]["state"] for node in G.nodes] )
+    print("info", infoTypes)
+    """print("state before", [G.nodes[node]["state"] for node in G.nodes] )
     print("infos before", [G.nodes[node]["Info"] for node in G.nodes] )
     print("probs before", [G.nodes[node]["p"] for node in G.nodes] )
     draw_graph(G,"beforeSIR")"""
-    SIR(G, infoTypes, pInfect, pRecover)
+    for i in range(days) :
+        SIR(G, infoTypes, pInfect, pRecover)
+    election(G)
     """print("state after", [G.nodes[node]["state"] for node in G.nodes] )
     print("infos after", [G.nodes[node]["Info"] for node in G.nodes] )
     print("probs after", [G.nodes[node]["p"] for node in G.nodes] )
