@@ -2,6 +2,8 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import random as rd
 import time
+import generate_network as gn
+import sys
 
 Pv = [
     [0.00025, 0, 0, 0.00025],
@@ -203,15 +205,14 @@ def main():
     #record start time
     start_time=time.time()
 
+    inputFile = str(sys.argv[1])
+
     # generate a random graph
     #Our sample network consists of 100,000 nodes, and average connectivity of node
     #ranges from 5 to 25
 
-    seedVal = 7
-    rd.seed(seedVal)
-
     # PARAMETERS
-    days = 100
+    days = 3
     num_nodes=10000
     #avg_degree=rd.randint(5,25)
     avg_degree = 5
@@ -228,7 +229,16 @@ def main():
     infoTypes = [ rd.choice(['GA', 'BA', 'GB', 'BB']) ]
 
     # create the network
-    G=nx.dense_gnm_random_graph(num_nodes,num_edges,seedVal)
+    #G=nx.dense_gnm_random_graph(num_nodes,num_edges,seedVal)
+
+    # stuff will array with seed value as first item and the network as second
+    stuff = gn.read_network(inputFile)
+
+    seedVal = stuff[0]
+    rd.seed(seedVal)
+
+    G = stuff[1]
+
     print("Done building network", "--- %s seconds ---" % (time.time() - start_time))
 
     #assign attributes to nodes in the network

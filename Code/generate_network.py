@@ -16,13 +16,12 @@ def generate_network(seedVal,num_nodes,avg_degree):
 
     #write to pickle series data
     filename = "network_node-%d_degree-%d_seed-%d.pkl" % (num_nodes,avg_degree,seedVal)
-    pickle.dump(G,open(filename,"wb"))
+    pickle.dump([seedVal,G],open(filename,"wb"))
     print("--- %s seconds ---" % (time.time() - start_time))
 
 def read_network(filename):
     "load network from a .pkl file"
-    G=pickle.load(open(filename,"rb"))
-    return G
+    return pickle.load(open(filename,"rb"))
 
 def main():
     print("Enter the arguements for generating a network")
@@ -30,7 +29,7 @@ def main():
     num_nodes=input("Enter values for num_nodes: ")
     avg_degree=input("Enter values for avg_degree: ")
 
-    generate(int(seedVal),int(num_nodes),int(avg_degree))
+    generate_network(int(seedVal),int(num_nodes),int(avg_degree))
 
 
 if __name__ == "__main__":
