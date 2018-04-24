@@ -240,7 +240,7 @@ def main():
     #assign attributes to nodes in the network
     assign_attr(G, probA, probB)
 
-    #rd.seed(rd.randint(0, 100000000000000))
+    rd.seed(rd.randint(0, 100000000000000))
 
     # initialization of information array
     infoTypes = [ getInfoType( infoDist ) ]
