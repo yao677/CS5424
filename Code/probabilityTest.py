@@ -6,11 +6,11 @@ import generate_network as gn
 import sys
 
 Pv = [
-    [0.005, 0, 0, 0.005],
-    [0.0025, -0.0025, -0.0025, 0],
-    [0.0025, 0, -0.0025, 0],
-    [0. , 0, -0.0025, 0.0025],
-    [0, -0.005, -0.005, 0]
+    [0.00025, 0, 0, 0.00025],
+    [0.0005, -0.0005, -0.0005, 0],
+    [0.0005, 0, -0.0005, 0],
+    [0. , 0, -0.0005, 0.0005],
+    [0, -0.00025, -0.00025, 0]
     ]
 
 Pe = [
@@ -102,7 +102,6 @@ def SIR(graph, infoTypes, pInfect, pRecover, pMediaEvent, pObserveMedia, infoDis
                             temp = G.nodes[node]["Info"].copy()
                             temp[i] = "I"
                             graph.add_node(node, Info=temp)
-                            count += 1
 
                             # UPDATE VOTING PROBABILITY
                             state = G.nodes[node]["state"]
@@ -137,7 +136,6 @@ def SIR(graph, infoTypes, pInfect, pRecover, pMediaEvent, pObserveMedia, infoDis
                 temp = graph.nodes[node]["Info"].copy()
                 temp.append("I")
                 graph.add_node(node, Info=temp)
-                count += 1
 
                 # UPDATE VOTING PROBABILITY
                 state = G.nodes[node]["state"]
@@ -162,7 +160,7 @@ def SIR(graph, infoTypes, pInfect, pRecover, pMediaEvent, pObserveMedia, infoDis
                 temp.append("S")
                 graph.add_node(node, Info=temp)
 
-    return count
+    return
 
 
 # draw graph function
@@ -215,12 +213,12 @@ def election(graph) :
 
     for node in graph :
         # draw rand num, if below voting prob for cand A, vote A, else vote B
-        if graph.nodes[node]["p"] >= rd.uniform(0,1) : votesA += 1
+        if graph.nodes[node]["p"] <= rd.uniform(0,1) : votesA += 1
         else : votesB += 1
 
-    """print("Tallies: \n\tCandidate A:", votesA, "\n\tCandidate B:", votesB)
+    print("Tallies: \n\tCandidate A:", votesA, "\n\tCandidate B:", votesB)
     if votesA > votesB : print("Candidate A Wins!")
-    else : print("Candidate B Wins!")"""
+    else : print("Candidate B Wins!")
 
     if votesA > votesB : print("A")
     else : print("B")
@@ -241,16 +239,14 @@ def main():
     #ranges from 5 to 25
 
     # PARAMETERS
-    days = 100
+    days = 10
     probA = 0.50        # probability of being in party A
     probB = 0.20        # probability of being in party B
     pInfect = 0.4       # probability of receiving info from another individual
     pRecover = 0.2      # probability of stopping the spread of information
     pMediaEvent = 0.7   # probability a media event occurs
-    pObserveMedia = 0.2 # probability of observing a media event
-    #infoDist = [0.183, 0.45, 0.183, 0.183]
-    infoDist = [0.25, 0.25, 0.25, 0.25]
-
+    pObserveMedia = 1 # probability of observing a media event
+    infoDist = [0.183, 0.45, 0.183, 0.183]
 
     # stuff is array with seed value as first item and the network as second
     stuff = gn.read_network(inputFile)
@@ -273,15 +269,14 @@ def main():
 
     #print("info", infoTypes)
     #draw_graph(G,"beforeSIR")
-    #count = 0
     for i in range(days) :
         SIR(G, infoTypes, pInfect, pRecover, pMediaEvent, pObserveMedia, infoDist)
-        #print("DAY",i, "COMPLETE")
-    #print("probabilites", [G.nodes[node]["p"] for node in G.nodes] )
-    #print("info", infoTypes)
-    #print(infoTypes.count("GA")/len(infoTypes),infoTypes.count("BA")/len(infoTypes),infoTypes.count("GB")/len(infoTypes),infoTypes.count("BB")/len(infoTypes))
-    #print("COUNT =", count)
-    #print(infoDist)
+        print("DAY",i, "COMPLETE")
+        print("state", [G.nodes[node]["state"] for node in G.nodes] )
+        print("probabilites", [G.nodes[node]["p"] for node in G.nodes] )
+        print("info", infoTypes)
+    print(infoTypes.count("GA")/len(infoTypes),infoTypes.count("BA")/len(infoTypes),infoTypes.count("GB")/len(infoTypes),infoTypes.count("BB")/len(infoTypes))
+    print(infoDist)
     #draw_graph(G,"afterSIR")
     election(G)
 

@@ -4,12 +4,13 @@ import random as rd
 import time
 import generate_network as gn
 import sys
+import pickle
 
 Pv = [
     [0.005, 0, 0, 0.005],
     [0.0025, -0.0025, -0.0025, 0],
     [0.0025, 0, -0.0025, 0],
-    [0. , 0, -0.0025, 0.0025],
+    [0.0025, 0, -0.0025, 0.0025],
     [0, -0.005, -0.005, 0]
     ]
 
@@ -235,21 +236,32 @@ def main():
     start_time=time.time()
 
     inputFile = str(sys.argv[1])
+    outputFile = "run1_V2_network_"+ str(sys.argv[2]) + str(sys.argv[3])+ ".pkl"
 
     # generate a random graph
     #Our sample network consists of 100,000 nodes, and average connectivity of node
     #ranges from 5 to 25
 
     # PARAMETERS
-    days = 100
+    days = 10
     probA = 0.50        # probability of being in party A
     probB = 0.20        # probability of being in party B
     pInfect = 0.4       # probability of receiving info from another individual
     pRecover = 0.2      # probability of stopping the spread of information
     pMediaEvent = 0.7   # probability a media event occurs
     pObserveMedia = 0.2 # probability of observing a media event
-    #infoDist = [0.183, 0.45, 0.183, 0.183]
-    infoDist = [0.25, 0.25, 0.25, 0.25]
+
+    #infoDist = [0.25, 0.25, 0.25, 0.25]         # Run 1
+    infoDist = [0.233, 0.233, 0.3, 0.233]       # Run 2
+    #infoDist = [0.217, 0.217, 0.35, 0.217]      # Run 3
+    #infoDist = [0.2, 0.2, 0.4, 0.2]             # Run 4
+    #infoDist = [0.183, 0.183, 0.45, 0.183]      # Run 5
+    #infoDist = [0.233, 0.3, 0.233, 0.233]       # Run 6
+    #infoDist = [0.217, 0.35, 0.217, 0.217]      # Run 7
+    #infoDist = [0.2, 0.4, 0.2, 0.2]             # Run 8
+    #infoDist = [0.183, 0.45, 0.183, 0.183]      # Run 9
+
+
 
 
     # stuff is array with seed value as first item and the network as second
@@ -276,6 +288,9 @@ def main():
     #count = 0
     for i in range(days) :
         SIR(G, infoTypes, pInfect, pRecover, pMediaEvent, pObserveMedia, infoDist)
+
+    f = open(outputFile, "wb")
+    pickle.dump(G, f)
         #print("DAY",i, "COMPLETE")
     #print("probabilites", [G.nodes[node]["p"] for node in G.nodes] )
     #print("info", infoTypes)
