@@ -227,7 +227,7 @@ def main():
     pRecover = 0.2      # probability of stopping the spread of information
     pMediaEvent = 0.7   # probability a media event occurs
     pObserveMedia = 0.2 # probability of observing a media event
-    infoDist = [0.25, 0.25, 0.25, 0.25]
+    infoDist = [0.2, 0.2, 0.4, 0.2]
 
     # stuff is array with seed value as first item and the network as second
     stuff = gn.read_network(inputFile)
