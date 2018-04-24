@@ -236,14 +236,14 @@ def main():
     start_time=time.time()
 
     inputFile = str(sys.argv[1])
-    outputFile = "run1_V2_network_"+ str(sys.argv[2]) + str(sys.argv[3])+ ".pkl"
+    outputFile = str(sys.argv[0][:-3]) + "_" + str(sys.argv[2]) + str(sys.argv[3])+ ".pkl"
 
     # generate a random graph
     #Our sample network consists of 100,000 nodes, and average connectivity of node
     #ranges from 5 to 25
 
     # PARAMETERS
-    days = 10
+    days = 100
     probA = 0.50        # probability of being in party A
     probB = 0.20        # probability of being in party B
     pInfect = 0.4       # probability of receiving info from another individual
