@@ -62,7 +62,7 @@ def assign_attr(graph, probA, probB):
 
 
 #SIR event in the network
-def SIR(graph, infoTypes, pInfect, pRecover, pMediaEvent, pObserveMedia):
+def SIR(graph, infoTypes, pInfect, pRecover, pMediaEvent, pObserveMedia, infoDist):
     "A SIR event consits of I+S->I+I, I->R and S->I"
 
     global Pv
@@ -126,7 +126,7 @@ def SIR(graph, infoTypes, pInfect, pRecover, pMediaEvent, pObserveMedia):
     #S->I (media interactions)
     if rd.uniform(0,1) <= pMediaEvent :  # does media event occur?
 
-        infoTypes.append( rd.choice(['GA', 'BA', 'GB', 'BB']) )
+        infoTypes.append( getInfoType(infoDist) )
 
         for node in G :
             if rd.uniform(0,1) <= pObserveMedia :
@@ -202,8 +202,8 @@ def election(graph) :
 
     return
 
-def randomInfoType() :
-    possibleType = ['GA', 'BA', 'GB', 'BB']
+def getInfoType(dist) :
+    return rd.choices(['GA', 'BA', 'GB', 'BB'], dist)[0]
 
 def main():
     #record start time
@@ -216,26 +216,16 @@ def main():
     #ranges from 5 to 25
 
     # PARAMETERS
-    days = 1
-    num_nodes=10000
-    #avg_degree=rd.randint(5,25)
-    avg_degree = 5
-    num_edges=num_nodes*avg_degree/2
-    #num_edges = 10     # for testing only
+    days = 500
     probA = 0.38        # probability of being in party A
     probB = 0.32        # probability of being in party B
     pInfect = 0.6       # probability of receiving info from another individual
     pRecover = 0.1      # probability of stopping the spread of information
     pMediaEvent = 0.7   # probability a media event occurs
     pObserveMedia = 0.2 # probability of observing a media event
+    infoDist = [0.2, 0.2, 0.4, 0.2]
 
-    # initialization of information array
-    infoTypes = [ rd.choice(['GA', 'BA', 'GB', 'BB']) ]
-
-    # create the network
-    #G=nx.dense_gnm_random_graph(num_nodes,num_edges,seedVal)
-
-    # stuff will array with seed value as first item and the network as second
+    # stuff is array with seed value as first item and the network as second
     stuff = gn.read_network(inputFile)
 
     seedVal = stuff[0]
@@ -243,7 +233,8 @@ def main():
 
     G = stuff[1]
 
-    #print("Done building network", "--- %s seconds ---" % (time.time() - start_time))
+    # initialization of information array
+    infoTypes = [ getInfoType( infoDist ) ]
 
     #assign attributes to nodes in the network
     assign_attr(G, probA, probB)
@@ -253,8 +244,10 @@ def main():
     print("info", infoTypes)
     draw_graph(G,"beforeSIR")
     for i in range(days) :
-        SIR(G, infoTypes, pInfect, pRecover, pMediaEvent, pObserveMedia)
+        SIR(G, infoTypes, pInfect, pRecover, pMediaEvent, pObserveMedia, infoDist)
+        #print("DAY",i, "COMPLETE")
     print("info", infoTypes)
+    print(infoTypes.count("GA"),infoTypes.count("BA"),infoTypes.count("GB"),infoTypes.count("BB"))
     draw_graph(G,"afterSIR")
     election(G)
 
