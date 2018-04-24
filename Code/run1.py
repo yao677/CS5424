@@ -233,19 +233,19 @@ def main():
     stuff = gn.read_network(inputFile)
 
     seedVal = stuff[0]
-    rd.seed(seedVal)
+    #rd.seed(seedVal)
 
     G = stuff[1]
 
     #assign attributes to nodes in the network
     assign_attr(G, probA, probB)
 
-    rd.seed(rd.randint(0, 100000000000000))
+    #rd.seed(rd.randint(0, 100000000000000))
 
     # initialization of information array
     infoTypes = [ getInfoType( infoDist ) ]
 
-    print("Done assigning", "--- %s seconds ---" % (time.time() - start_time))
+    #print("Done assigning", "--- %s seconds ---" % (time.time() - start_time))
 
 
     #print("info", infoTypes)
