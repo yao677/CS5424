@@ -2,10 +2,10 @@
 
 
 ## Simple illustration of an agent-based network and information spreading in it
-![A simple illustration of information spreading in a network](Figure/samplegif.gif) ![](Figure/samplenotation.png)
+<img src="Figure/samplegif.gif" width="425"/> <img src="Figure/samplenotation.png" width="425"/>
 
 ## Information state, emotion state together affect one's final decision
-![Effect of information on voting probability ](Figure/pvtable.png) ![ Effect of information on emotional state](Figure/petable.png)
+<img src="Figure/pvtable.png" width="425"/> <img src="Figure/petable.png" width="425"/>
 
 
 ## Incorporation of media news
